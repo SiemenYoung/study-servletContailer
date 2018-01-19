@@ -34,4 +34,11 @@ public interface Server {
      * @return
      */
     ServerStatus getStatus();
+
+
+    /**
+     * 获取端口号
+     * @return
+     */
+    int getPORT();
 }

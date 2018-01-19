@@ -27,9 +27,16 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestServer {
 
-    private static final Server server = ServerFactory.produce();
+    private static  Server server ;
 
     @BeforeClass
+    public static void init() {
+
+        ServerConfig serverConfig = new ServerConfig();
+
+        server = ServerFactory.produce(serverConfig);
+
+    }
 
     @Test
     public void testServerStart() {
@@ -45,6 +52,13 @@ public class TestServer {
         server.stop();
 
         assertTrue("服务器关闭后，状态是STOPED",server.getStatus().equals(ServerStatus.STOPED));
+    }
+    @Test
+    public void testServerPort() {
+
+        int port = server.getPORT();
+
+        assertTrue("默认端口号", ServerConfig.DEFAULT_PORT == port);
     }
 
 

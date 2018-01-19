@@ -11,6 +11,7 @@
 package com.ysm.impl;
 
 import com.ysm.Server;
+import com.ysm.ServerConfig;
 import com.ysm.ServerStatus;
 
 /**
@@ -25,6 +26,13 @@ import com.ysm.ServerStatus;
 public class SimpleServer implements Server {
 
     private ServerStatus serverStatus = ServerStatus.STOPED;
+
+    private final int PORT ;
+
+
+    public SimpleServer(ServerConfig serverConfig) {
+        this.PORT = serverConfig.getPORT();
+    }
 
     @Override
     public void start() {
@@ -46,6 +54,12 @@ public class SimpleServer implements Server {
     public ServerStatus getStatus() {
 
         return serverStatus;
+
+    }
+
+    public int getPORT(){
+
+        return this.PORT;
 
     }
 }

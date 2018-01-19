@@ -27,7 +27,7 @@ public class ServerFactory {
      * 返回server实例
      * @return
      */
-    public static  Server produce() {
-        return new SimpleServer();
+    public static  Server produce(ServerConfig serverConfig) {
+        return new SimpleServer(serverConfig);
     }
 }
