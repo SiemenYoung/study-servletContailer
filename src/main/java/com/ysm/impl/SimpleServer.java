@@ -14,6 +14,10 @@ import com.ysm.Server;
 import com.ysm.ServerConfig;
 import com.ysm.ServerStatus;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * @version 1.0.0
  * @Title: SimpleServer
@@ -25,9 +29,11 @@ import com.ysm.ServerStatus;
  */
 public class SimpleServer implements Server {
 
-    private ServerStatus serverStatus = ServerStatus.STOPED;
+    private volatile ServerStatus serverStatus = ServerStatus.STOPED;
 
     private final int PORT ;
+
+    private ServerSocket serverSocket;
 
 
     public SimpleServer(ServerConfig serverConfig) {
@@ -36,14 +42,49 @@ public class SimpleServer implements Server {
 
     @Override
     public void start() {
+        Socket socket = null;
+        try {
+             this.serverSocket = new ServerSocket(this.PORT);
 
-        serverStatus = ServerStatus.STARTED;
+             this.serverStatus = ServerStatus.STARTED;
 
-        System.out.println("server start ");
+             System.out.println("server start ");
+
+            while (true) {
+                socket = serverSocket.accept();
+
+                System.out.println(
+                        "新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
     }
 
     @Override
     public void stop() {
+
+        if (this.serverSocket != null) {
+            try {
+                this.serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         serverStatus = ServerStatus.STOPED;
 
