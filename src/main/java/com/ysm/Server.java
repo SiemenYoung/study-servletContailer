@@ -28,4 +28,10 @@ public interface Server {
      * 关闭服务器
      */
     void stop();
+
+    /**
+     * 获取server状态
+     * @return
+     */
+    ServerStatus getStatus();
 }

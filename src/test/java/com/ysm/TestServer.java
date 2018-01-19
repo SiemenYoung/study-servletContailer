@@ -14,6 +14,8 @@ import com.ysm.impl.SimpleServer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * @version 1.0.0
  * @Title: TestServer
@@ -31,11 +33,19 @@ public class TestServer {
 
     @Test
     public void testServerStart() {
+
         server.start();
+
+        assertTrue("服务器启动后，状态是STARTED",server.getStatus().equals(ServerStatus.STARTED));
     }
 
     @Test
     public void testServerStop() {
+
         server.stop();
+
+        assertTrue("服务器关闭后，状态是STOPED",server.getStatus().equals(ServerStatus.STOPED));
     }
+
+
 }

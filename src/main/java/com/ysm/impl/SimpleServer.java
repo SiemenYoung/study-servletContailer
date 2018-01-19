@@ -11,6 +11,7 @@
 package com.ysm.impl;
 
 import com.ysm.Server;
+import com.ysm.ServerStatus;
 
 /**
  * @version 1.0.0
@@ -22,8 +23,13 @@ import com.ysm.Server;
  * @date 2018/1/19 16:58
  */
 public class SimpleServer implements Server {
+
+    private ServerStatus serverStatus = ServerStatus.STOPED;
+
     @Override
     public void start() {
+
+        serverStatus = ServerStatus.STARTED;
 
         System.out.println("server start ");
     }
@@ -31,6 +37,15 @@ public class SimpleServer implements Server {
     @Override
     public void stop() {
 
+        serverStatus = ServerStatus.STOPED;
+
         System.out.println("server end ");
+    }
+
+    @Override
+    public ServerStatus getStatus() {
+
+        return serverStatus;
+
     }
 }
