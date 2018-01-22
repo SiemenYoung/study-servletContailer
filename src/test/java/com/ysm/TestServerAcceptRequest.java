@@ -10,9 +10,13 @@
  */
 package com.ysm;
 
+import com.ysm.config.ServerConfig;
+import com.ysm.io.IoUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,6 +35,8 @@ import static org.junit.Assert.assertTrue;
  * @date 2018/1/19 17:54
  */
 public class TestServerAcceptRequest {
+
+    private static Logger logger = LoggerFactory.getLogger(TestServerAcceptRequest.class);
 
     private static Server server;
     // 设置超时时间为500毫秒
@@ -52,7 +58,7 @@ public class TestServerAcceptRequest {
 
             while (server.getStatus().equals(ServerStatus.STOPED)) {
 
-                System.out.println(" 等待启动中");
+                logger.info(" 等待启动中");
 
                 try {
                     Thread.sleep(500);
@@ -72,11 +78,7 @@ public class TestServerAcceptRequest {
                     e.printStackTrace();
                 }
                 finally {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    IoUtils.closeQuietly(socket);
                 }
             }
         }

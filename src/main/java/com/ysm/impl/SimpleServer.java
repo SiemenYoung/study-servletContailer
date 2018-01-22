@@ -11,12 +11,16 @@
 package com.ysm.impl;
 
 import com.ysm.Server;
-import com.ysm.ServerConfig;
+import com.ysm.config.ServerConfig;
 import com.ysm.ServerStatus;
+import com.ysm.io.IoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 
 /**
  * @version 1.0.0
@@ -29,6 +33,8 @@ import java.net.Socket;
  */
 public class SimpleServer implements Server {
 
+    private static Logger logger = LoggerFactory.getLogger(SimpleServer.class);
+
     private volatile ServerStatus serverStatus = ServerStatus.STOPED;
 
     private final int PORT ;
@@ -40,6 +46,7 @@ public class SimpleServer implements Server {
         this.PORT = serverConfig.getPORT();
     }
 
+
     @Override
     public void start() {
         Socket socket = null;
@@ -48,27 +55,19 @@ public class SimpleServer implements Server {
 
              this.serverStatus = ServerStatus.STARTED;
 
-             System.out.println("server start ");
 
             while (true) {
                 socket = serverSocket.accept();
 
-                System.out.println(
-                        "新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
+                logger.info("新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
             }
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         finally {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            IoUtils.closeQuietly(socket);
         }
 
 
@@ -77,18 +76,11 @@ public class SimpleServer implements Server {
     @Override
     public void stop() {
 
-        if (this.serverSocket != null) {
-            try {
-                this.serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+        IoUtils.closeQuietly(serverSocket);
 
         serverStatus = ServerStatus.STOPED;
 
-        System.out.println("server end ");
+        logger.info("Server stop");
     }
 
     @Override

@@ -8,7 +8,7 @@
  * @date 2018/1/19 17:26
  * @version V1.0
  */
-package com.ysm;
+package com.ysm.config;
 
 /**
  * @version 1.0.0

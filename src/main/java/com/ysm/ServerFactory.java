@@ -10,6 +10,7 @@
  */
 package com.ysm;
 
+import com.ysm.config.ServerConfig;
 import com.ysm.impl.SimpleServer;
 
 /**

@@ -10,7 +10,7 @@
  */
 package com.ysm;
 
-import com.ysm.impl.SimpleServer;
+import com.ysm.config.ServerConfig;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
