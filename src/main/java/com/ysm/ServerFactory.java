@@ -12,6 +12,13 @@ package com.ysm;
 
 import com.ysm.config.ServerConfig;
 import com.ysm.impl.SimpleServer;
+import com.ysm.io.Connector;
+import com.ysm.io.ConnectorFactory;
+import com.ysm.io.socket.SocketConnectorConfig;
+import com.ysm.io.socket.SocketConnectorFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @version 1.0.0
@@ -29,6 +36,14 @@ public class ServerFactory {
      * @return
      */
     public static  Server produce(ServerConfig serverConfig) {
-        return new SimpleServer(serverConfig);
+
+        List<Connector> list = new ArrayList<>();
+
+        ConnectorFactory connectorFactory =
+                new SocketConnectorFactory(new SocketConnectorConfig(serverConfig.getPORT()));
+
+        list.add(connectorFactory.getConnector());
+
+        return new SimpleServer(serverConfig,list);
     }
 }

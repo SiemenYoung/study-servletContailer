@@ -13,6 +13,7 @@ package com.ysm.impl;
 import com.ysm.Server;
 import com.ysm.config.ServerConfig;
 import com.ysm.ServerStatus;
+import com.ysm.io.Connector;
 import com.ysm.io.IoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 
 /**
@@ -39,36 +41,19 @@ public class SimpleServer implements Server {
 
     private final int PORT ;
 
-    private ServerSocket serverSocket;
+    private final List<Connector> connectorList;
 
 
-    public SimpleServer(ServerConfig serverConfig) {
+    public SimpleServer(ServerConfig serverConfig,List<Connector> connectorList) {
+        this.connectorList = connectorList;
         this.PORT = serverConfig.getPORT();
     }
 
 
     @Override
     public void start() {
-        Socket socket = null;
-        try {
-             this.serverSocket = new ServerSocket(this.PORT);
-
-             this.serverStatus = ServerStatus.STARTED;
-
-
-            while (true) {
-                socket = serverSocket.accept();
-
-                logger.info("新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
-            }
-
-
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-        finally {
-            IoUtils.closeQuietly(socket);
-        }
+        connectorList.stream().forEach(connector -> connector.start());
+        this.serverStatus = ServerStatus.STARTED;
 
 
     }
@@ -76,10 +61,8 @@ public class SimpleServer implements Server {
     @Override
     public void stop() {
 
-        IoUtils.closeQuietly(serverSocket);
-
-        serverStatus = ServerStatus.STOPED;
-
+        connectorList.stream().forEach(connector -> connector.stop());
+        this.serverStatus = ServerStatus.STOPED;
         logger.info("Server stop");
     }
 
