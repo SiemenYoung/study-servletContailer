@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
  * @author yangshiming.ysm
  * @date 2018/1/19 17:54
  */
-public class TestServerAcceptRequest {
+public class TestServerAcceptRequest extends TestServerBase{
 
     private static Logger logger = LoggerFactory.getLogger(TestServerAcceptRequest.class);
 
@@ -52,40 +52,33 @@ public class TestServerAcceptRequest {
     public void testServerAcceptRequest() {
 
         if (server.getStatus().equals(ServerStatus.STOPED)) {
-            new Thread(() -> {
-                server.start();
-            }).run();
 
-            while (server.getStatus().equals(ServerStatus.STOPED)) {
+            startServer(server);
 
-                logger.info(" 等待启动中");
+            waitServerStart(server);
 
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            Socket socket = new Socket();
 
-                Socket socket = new Socket();
+            SocketAddress endPoint = new InetSocketAddress("localhost", ServerConfig.DEFAULT_PORT);
 
-                SocketAddress endPoint = new InetSocketAddress("localhost", ServerConfig.DEFAULT_PORT);
+            try {
+                socket.connect(endPoint,TIMEOUT);
 
-                try {
-                    socket.connect(endPoint,TIMEOUT);
-
-                    assertTrue("服务器启动后，能接受请求", socket.isConnected());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    IoUtils.closeQuietly(socket);
-                }
+                assertTrue("服务器启动后，能接受请求", socket.isConnected());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                IoUtils.closeQuietly(socket);
             }
         }
     }
+
 
     @AfterClass
     public static void destroy() {
         server.stop();
     }
+
+
 }

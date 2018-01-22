@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  * @author yangshiming.ysm
  * @date 2018/1/19 16:59
  */
-public class TestServer {
+public class TestServer extends TestServerBase{
 
     private static  Server server ;
 
@@ -41,9 +41,11 @@ public class TestServer {
     @Test
     public void testServerStart() {
 
-        server.start();
+        startServer(server);
 
-        assertTrue("服务器启动后，状态是STARTED",server.getStatus().equals(ServerStatus.STARTED));
+        waitServerStart(server);
+
+        assertTrue("服务器启动后，状态是STARTED", server.getStatus().equals(ServerStatus.STARTED));
     }
 
     @Test
