@@ -10,6 +10,8 @@
  */
 package com.ysm.io.socket;
 
+import com.ysm.event.EventListener;
+
 /**
  * @version 1.0.0
  * @Title: SocketConnectorConfig

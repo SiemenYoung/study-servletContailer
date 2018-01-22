@@ -21,7 +21,7 @@ import com.ysm.LifeCycle;
  * @author yangshiming.ysm
  * @date 2018/1/22 11:36
  */
-public abstract class Connector implements LifeCycle {
+public abstract class Connector<T> implements LifeCycle {
 
     @Override
     public void start() {
@@ -34,4 +34,6 @@ public abstract class Connector implements LifeCycle {
     protected abstract void init() throws ConnectorException;
 
     protected abstract void acceptConnect() throws ConnectorException;
+
+    protected abstract void whenAccept(T connect) throws ConnectorException;
 }

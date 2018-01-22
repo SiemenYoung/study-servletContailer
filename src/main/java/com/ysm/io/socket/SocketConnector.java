@@ -10,6 +10,7 @@
  */
 package com.ysm.io.socket;
 
+import com.ysm.event.EventListener;
 import com.ysm.io.Connector;
 import com.ysm.io.ConnectorException;
 import com.ysm.io.IoUtils;
@@ -29,7 +30,7 @@ import java.net.Socket;
  * @author yangshiming.ysm
  * @date 2018/1/22 11:40
  */
-public class SocketConnector extends Connector {
+public class SocketConnector extends Connector<Socket> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketConnector.class);
 
@@ -39,10 +40,14 @@ public class SocketConnector extends Connector {
 
     private volatile boolean started = false;
 
+    private final EventListener<Socket> eventListener;
 
-    public SocketConnector(int port) {
+
+    public SocketConnector(int port,EventListener<Socket> eventListener) {
 
         this.PORT = port;
+
+        this.eventListener = eventListener;
     }
 
 
@@ -58,7 +63,7 @@ public class SocketConnector extends Connector {
         try {
             this.serverSocket = new ServerSocket(this.PORT);
 
-            started = false;
+            started = true;
 
         } catch (IOException e) {
             throw new ConnectorException();
@@ -75,7 +80,8 @@ public class SocketConnector extends Connector {
 
                 try {
                     socket = serverSocket.accept();
-                    LOGGER.info("新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
+
+                    whenAccept(socket);
                 } catch (IOException e) {
                     LOGGER.error(e.getMessage(), e);
                 }finally {
@@ -84,5 +90,11 @@ public class SocketConnector extends Connector {
             }
 
         }).start();
+    }
+
+    @Override
+    protected void whenAccept(Socket socketConnect) throws ConnectorException {
+
+        eventListener.onEvent(socketConnect);
     }
 }
