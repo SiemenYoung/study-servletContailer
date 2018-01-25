@@ -10,18 +10,14 @@
  */
 package com.ysm.event.impl;
 
-import com.ysm.event.EventException;
-import com.ysm.event.EventListener;
-import com.ysm.io.IoUtils;
+import com.ysm.event.AbstractEventListener;
+import com.ysm.handler.EventHandler;
+import com.ysm.handler.impl.EchoEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * @version 1.0.0
@@ -32,47 +28,22 @@ import java.util.Scanner;
  * @author yangshiming.ysm
  * @date 2018/1/22 15:20
  */
-public class SocketEventListener implements EventListener<Socket> {
+public class SocketEventListener extends AbstractEventListener<Socket> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketEventListener.class);
 
+    private final EchoEventHandler echoEventHandler;
+
+    public SocketEventListener(EchoEventHandler echoEventHandler) {
+        this.echoEventHandler = echoEventHandler;
+    }
+
     @Override
-    public void onEvent(Socket socket) throws EventException {
-
-        LOGGER.info("新增连接：" + socket.getInetAddress() + ":" + socket.getPort());
-        try {
-            echo(socket);
-        } catch (IOException e) {
-            throw new EventException(e);
-        }
-
+    protected EventHandler<Socket> getHandler(Socket socket) {
+        return echoEventHandler;
     }
 
-    private void echo(Socket socket) throws IOException{
-        InputStream inputstream = null;
-        OutputStream outputStream = null;
-        try {
-            inputstream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
-            Scanner scanner = new Scanner(inputstream);
-            PrintWriter printWriter = new PrintWriter(outputStream);
-            printWriter.append("Server connected.Welcome to echo.\n");
-            printWriter.flush();
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.equals("stop")) {
-                    printWriter.append("bye bye.\n");
-                    printWriter.flush();
-                    break;
-                } else {
-                    printWriter.append(line);
-                    printWriter.append("\n");
-                    printWriter.flush();
-                }
-            }
-        } finally {
-            IoUtils.closeQuietly(inputstream);
-            IoUtils.closeQuietly(outputStream);
-        }
-    }
+
+
+
 }

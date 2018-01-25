@@ -1,5 +1,5 @@
 /**
- * @Title: EventException
+ * @Title: HandlerException
  * @Package com.ysm.event
  * @Description: TODO
  * Copyright: Copyright (c) 2016
@@ -12,7 +12,7 @@ package com.ysm.event;
 
 /**
  * @version 1.0.0
- * @Title: EventException
+ * @Title: HandlerException
  * @Package: com.ysm.event
  * @Description: Copyright: Copyright (c) 2016
  * @Company: 成都壹柒互动科技有限公司

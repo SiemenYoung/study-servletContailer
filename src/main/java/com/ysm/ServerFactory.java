@@ -13,6 +13,7 @@ package com.ysm;
 import com.ysm.config.ServerConfig;
 import com.ysm.event.EventListener;
 import com.ysm.event.impl.SocketEventListener;
+import com.ysm.handler.impl.EchoEventHandler;
 import com.ysm.impl.SimpleServer;
 import com.ysm.io.Connector;
 import com.ysm.io.ConnectorFactory;
@@ -41,7 +42,8 @@ public class ServerFactory {
 
         List<Connector> list = new ArrayList<>();
 
-        EventListener eventListener = new SocketEventListener();
+        EventListener eventListener =
+                new SocketEventListener(new EchoEventHandler());
 
         ConnectorFactory connectorFactory =
                 new SocketConnectorFactory(new SocketConnectorConfig(serverConfig.getPORT()),eventListener);
